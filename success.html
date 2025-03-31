@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Keysystem - Success</title>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            font-size: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #404DFF;
+            letter-spacing: 5px;
+            text-shadow: 0 0 10px #404DFF, 0 0 20px #404DFF;
+        }
+        .error-msg {
+            color: red;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            text-shadow: 0 0 10px red;
+            display: none; /* Hidden by default */
+        }
+        .btn {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        .btn:hover {
+            background-color: #404DFF;
+            color: #111;
+            box-shadow: 0 0 20px #404DFF;
+        }
+        .key-container {
+            display: none;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .key-box {
+            background-color: #222;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            width: 320px; /* Wider box to fit key in one line */
+            text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white;
+            display: none; /* Hide until key is generated */
+        }
+        .copy-btn {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: white;
+            text-shadow: 0 0 10px white, 0 0 20px white;
+            transition: 0.3s;
+            display: none; /* Hide until key is generated */
+        }
+        .copy-btn:hover {
+            color: #404DFF;
+            text-shadow: 0 0 15px #404DFF;
+        }
+        .checked {
+            color: #4CAF50; /* Green for checkmark */
+            font-size: 22px;
+            text-shadow: 0 0 10px #4CAF50, 0 0 20px #4CAF50, 0 0 30px #4CAF50; /* Green glow effect */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Keysystem Complete</h1>
+        <p class="error-msg" id="errorMsg">Bypasser Detected, Please Try Again..</p>
+        <button class="btn" id="getKeyBtn" onclick="generateKey()">Get Key</button>
+        <div class="key-container">
+            <div class="key-box" id="keyBox"></div>
+            <button class="copy-btn" id="copyKeyBtn" onclick="copyKey()">📋</button>
+        </div>
+    </div>
+
+    <script>
+        function checkBypass() {
+            let sessionValid = sessionStorage.getItem("checkpoint_completed");
+
+            if (!sessionValid) {
+                // If bypass detected, show error and disable key system
+                document.getElementById("errorMsg").style.display = "block";
+                document.getElementById("getKeyBtn").style.display = "none";
+            }
+        }
+
+        function generateRandomKey() {
+            return [...Array(32)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+        }
+
+        function generateKey() {
+            let keyBox = document.getElementById("keyBox");
+            let copyBtn = document.getElementById("copyKeyBtn");
+            let getKeyBtn = document.getElementById("getKeyBtn");
+
+            let newKey = generateRandomKey();
+            keyBox.innerText = newKey;
+
+            keyBox.style.display = "block";  // Show the key box
+            copyBtn.style.display = "inline-block"; // Show the copy button
+            getKeyBtn.remove();  // Remove "Get Key" button after clicking
+        }
+
+        function copyKey() {
+            let keyText = document.getElementById("keyBox").innerText;
+            let copyBtn = document.getElementById("copyKeyBtn");
+
+            navigator.clipboard.writeText(keyText).then(() => {
+                copyBtn.innerText = "✔️";
+                copyBtn.classList.add("checked"); // Apply the green glowing effect
+                copyBtn.disabled = true; // Disable the button after copy
+            }).catch(() => {
+                alert("Failed to copy key.");
+            });
+        }
+
+        // Run bypass check on page load
+        window.onload = checkBypass;
+    </script>
+</body>
+</html>
